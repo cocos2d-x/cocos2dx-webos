@@ -1,0 +1,149 @@
+#include "CCApplication.h"
+
+#include "CCDirector.h"
+#include "SDL.h"
+#include "PDL.h"
+
+/**
+@brief	This function change the PVRFrame show/hide setting in register.
+@param  bEnable If true show the PVRFrame window, otherwise hide.
+*/
+static void PVRFrameEnableControlWindow(bool bEnable);
+
+NS_CC_BEGIN;
+
+// sharedApplication pointer
+CCApplication * CCApplication::sm_pSharedApplication = 0;
+
+CCApplication::CCApplication()
+{
+    CC_ASSERT(! sm_pSharedApplication);
+    sm_pSharedApplication = this;
+}
+
+CCApplication::~CCApplication()
+{
+    CC_ASSERT(this == sm_pSharedApplication);
+    sm_pSharedApplication = NULL;
+}
+
+int CCApplication::run()
+{
+    PVRFrameEnableControlWindow(false);
+	CCLog("--- INTO CCApplication::run \n");
+
+    // Main message loop:
+    
+    // Initialize instance and cocos2d.
+    if (! initInstance() || ! applicationDidFinishLaunching())
+    {
+        return 0;
+    }
+    
+	
+    CCEGLView& mainWnd = CCEGLView::sharedOpenGLView();
+    mainWnd.centerWindow();
+   CCLog(" --- BEFORE EVENT LOOP\n");
+	 SDL_Event Event;
+	 while (1) {
+        bool gotEvent;
+#if (CC_TARGET_PLATFORM == CC_PLATFORM_WEBOS)
+//		 CCLog("--- Calling SDL_PollEvent \n");
+		 SDL_PollEvent(&Event);
+#else 
+		 CCLog(" --- Calling SDL_WaitEvent \n");
+		 SDL_WaitEvent(&Event);
+#endif
+//		  CCLog("--- GOT NEW EVENT .... \n");
+		 switch (Event.type) {
+                case SDL_KEYDOWN:
+                    switch (Event.key.keysym.sym) {
+                        case PDLK_GESTURE_BACK: /* also maps to ESC */
+                            if (PDL_GetPDKVersion() >= 200) {
+                                // standard behavior is to minimize to a card when you perform a back
+                                // gesture at the top level of the app
+                                PDL_Minimize();
+                            }
+                            break;
+
+                        default:
+                            break;
+                    }
+                    break;
+                case SDL_MOUSEBUTTONDOWN:
+//					CCLog(" --- GOT NEW EVENT (SDL_MOUSEBUTTONDOWN).... \n");
+					mainWnd.WindowProc(SDL_MOUSEBUTTONDOWN,Event);
+					break;
+				case SDL_MOUSEBUTTONUP:
+//					CCLog("--- GOT NEW EVENT (SDL_MOUSEBUTTONUP).... \n");
+					mainWnd.WindowProc(SDL_MOUSEBUTTONUP,Event);
+					break;
+				case SDL_MOUSEMOTION:
+					mainWnd.WindowProc(SDL_MOUSEMOTION,Event);
+					break;
+				case SDL_QUIT:
+                    // We exit anytime we get a request to quit the app
+                    // all shutdown code is registered via atexit() so this is clean.
+                    exit(0);
+                    break;
+
+                default:
+                    break;
+            }
+		   // Get current time tick.
+            // If it's the time to draw next frame, draw it, else sleep a while.
+            CCDirector::sharedDirector()->mainLoop();
+     }
+
+    return (int) 0;
+}
+
+void CCApplication::setAnimationInterval(double interval)
+{
+    //m_nAnimationInterval.QuadPart = interval; //(LONGLONG)(interval * nFreq.QuadPart);
+}
+
+CCApplication::Orientation CCApplication::setOrientation(Orientation orientation)
+{
+    // swap width and height
+    CCEGLView * pView = CCDirector::sharedDirector()->getOpenGLView();
+    if (pView)
+    {
+        return (Orientation)pView->setDeviceOrientation(orientation);
+    }
+    return (Orientation)CCDirector::sharedDirector()->getDeviceOrientation();
+}
+
+void CCApplication::statusBarFrame(CCRect * rect)
+{
+    if (rect)
+    {
+        // Windows doesn't have status bar.
+        *rect = CCRectMake(0, 0, 0, 0);
+    }
+}
+
+//////////////////////////////////////////////////////////////////////////
+// static member function
+//////////////////////////////////////////////////////////////////////////
+CCApplication& CCApplication::sharedApplication()
+{
+    CC_ASSERT(sm_pSharedApplication);
+    return *sm_pSharedApplication;
+}
+
+ccLanguageType CCApplication::getCurrentLanguage()
+{
+    ccLanguageType ret = kLanguageEnglish;
+    return ret;
+}
+
+NS_CC_END;
+
+//////////////////////////////////////////////////////////////////////////
+// Local function
+//////////////////////////////////////////////////////////////////////////
+static void PVRFrameEnableControlWindow(bool bEnable)
+{
+    
+}
