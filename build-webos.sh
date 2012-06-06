@@ -31,9 +31,9 @@ if [ $# -ne 0 ]; then
 		cd $p/cocos2dx/proj.webos
 		make clean
 
-#		cd ../../
-#		cd $p/CocosDenshion/proj.webos
-#		make clean
+		cd ../../
+		cd $p/CocosDenshion/proj.webos
+		make clean
 
 		cd ../..
 		cd $p/Box2D/proj.webos
@@ -55,10 +55,10 @@ else
 	cp -f libcocos2d.so ../../lib/webos/Debug
 
 #        echo "**********************building cocosdenshion*********************"
-#	cd ../../
-#	cd $p/CocosDenshion/proj.webos
-#	make
-#	cp -f libcocosdenshion.so ../../lib/webos/Debug
+	cd ../../
+	cd $p/CocosDenshion/proj.webos
+	make
+	cp -f libcocosdenshion.so ../../lib/webos/Debug
 
         echo "**********************building Box2D******************************"
 	cd ../..
