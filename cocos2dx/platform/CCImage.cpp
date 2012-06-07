@@ -152,8 +152,18 @@ bool CCImage::_initWithJpgData(void * data, int nSize)
         /* setup decompression process and source, then read JPEG header */
         jpeg_create_decompress( &cinfo );
 
-        jpeg_mem_src( &cinfo, (unsigned char *) data, nSize );
-
+#if (CC_TARGET_PLATFORM == CC_PLATFORM_WEBOS)
+    FILE * source = fmemopen(data, nSize, "rb");
+    if (source == NULL)
+    {
+        fprintf(stderr, "Calling fmemopen() has failed.\n");
+ 	    exit(1);
+    }	
+    jpeg_stdio_src(&cinfo, source);
+    fclose(source);
+#else	
+    jpeg_mem_src( &cinfo, (unsigned char *) data, nSize );
+#endif
         /* reading the image header which contains image information */
         jpeg_read_header( &cinfo, true );
 
