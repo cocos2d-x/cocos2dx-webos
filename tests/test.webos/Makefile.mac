@@ -1,5 +1,6 @@
 CC      = arm-none-linux-gnueabi-gcc
 CXX     = arm-none-linux-gnueabi-g++
+
 TARGET	= cocos2dx-test
 CCFLAGS = -Wall -g -O2 -fPIC -Wl,--allow-shlib-undefined
 CXXFLAGS = -Wall -g -O2 -fPIC -Wl,--allow-shlib-undefined 
@@ -7,15 +8,20 @@ VISIBILITY =
 
 INCLUDES = -I../ \
 					-I../../cocos2dx/platform/third_party/linux \
+					-I../../cocos2dx/platform/third_party/WebOS/libfreetype2 \
 					-I../../cocos2dx/include \
 					-I../../cocos2dx \
 					-I../../cocos2dx/platform \
+					-I../../cocos2dx/platform/third_party/WebOS/libxml2 \
+					-I../../cocos2dx/platform/third_party/WebOS/libjpeg \
 					-I../../CocosDenshion/include \
 					-I../../chipmunk/include/chipmunk \
 					-I../../ \
 					-I"/opt/PalmPDK/include" \
 					-I"/opt/PalmPDK/include/SDL" \
-					-L"/opt/PalmPDK/device/lib"
+					-L"/opt/PalmPDK/device/lib" \
+					-L../../cocos2dx/proj.webos \
+					-L../../cocos2dx/platform/third_party/WebOS/libraries
 
 DEFINES = -DWEBOS
 
@@ -107,12 +113,12 @@ OBJECTS = ../tests/AccelerometerTest/AccelerometerTest.o \
 					
 #../tests/CocosDenshionTest/CocosDenshionTest.o \
 STATICLIBS_DIR = ../../cocos2dx/platform/third_party/linux/libraries
-STATICLIBS =  ../../Box2D/proj.webos/libbox2d.a \
-							../../chipmunk/proj.webos/libchipmunk.a
-							
+STATICLIBS =  	../../Box2D/proj.webos/libbox2d.a \
+		../../chipmunk/proj.webos/libchipmunk.a \
+		../../cocos2dx/proj.webos/libcocos2d.a 
 							
 #SHAREDLIBS = -L../../lib/linux/Debug -lcocos2d -lrt -lz -lcocosdenshion -Wl,-rpath,../../lib/linux/Debug/
-SHAREDLIBS = -L../../cocos2dx/proj.webos/ -lcocos2d -lcurl -lGLES_CM
+SHAREDLIBS =  -lcurl -lGLES_CM -lSDL -lpdl -lpthread-2.5 -lpng12 -lz -lxml2 -lfreetype -ljpeg
 
 ####### Build rules
 $(TARGET): $(OBJECTS) 

@@ -1,9 +1,13 @@
 #MAKE FILE FOR WEBOS
 CC      = arm-none-linux-gnueabi-gcc
 CXX     = arm-none-linux-gnueabi-g++
-TARGET	= libcocos2d.so
-CCFLAGS = -Wall -g -O2 -fPIC -Wl,--allow-shlib-undefined
-CXXFLAGS = -Wall -g -O2 -fPIC -Wl,--allow-shlib-undefined
+AR      = arm-none-linux-gnueabi-ar
+RANLIB  = arm-none-linux-gnueabi-ranlib
+
+TARGET	= libcocos2d.a
+CCFLAGS = -Wall -g -O2 
+CXXFLAGS = -Wall -g -O2 
+ARFLAGS = cr
 VISIBILITY = 
 
 INCLUDES = -I.. \
@@ -110,11 +114,10 @@ OBJECTS = ../actions/CCAction.o \
 					../CCScheduler.o \
 					../cocos2d.o 
 
-SHAREDLIBS = -lSDL -lGLES_CM -lpdl -lpthread-2.5 -ljpeg -lpng12 -lz -lxml2
-
 ####### Build rules  $(STATICLIBS)
 $(TARGET): $(OBJECTS) 
-	$(CXX) $(CXXFLAGS) $(INCLUDES) $(DEFINES) $(OBJECTS) -shared -o $(TARGET) $(SHAREDLIBS)
+	$(AR) $(ARFLAGS) $(TARGET) $(OBJECTS)
+	$(RANLIB) $(TARGET) 
 	
 ####### Compile
 %.o: %.cpp
