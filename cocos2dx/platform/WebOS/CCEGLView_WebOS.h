@@ -22,8 +22,8 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 ****************************************************************************/
 
-#ifndef __CC_EGLVIEW_WIN32_H__
-#define __CC_EGLVIEW_WIN32_H__
+#ifndef __CC_EGLVIEW_WEBOS_H__
+#define __CC_EGLVIEW_WEBOS_H__
 
 #include "CCCommon.h"
 #include "CCGeometry.h"
@@ -56,7 +56,7 @@ public:
 
 	virtual bool Create(const char * pTitle, int w, int h);
 	virtual long WindowProc(SDL_EventType message, SDL_Event& Event);
-
+ 
     int setDeviceOrientation(int eOritation);
     void setViewPortInPoints(float x, float y, float w, float h);
     void setScissorInPoints(float x, float y, float w, float h);
@@ -73,6 +73,7 @@ public:
     @brief	get the shared main open gl window
     */
     static CCEGLView& sharedOpenGLView();
+
 
 protected:
 

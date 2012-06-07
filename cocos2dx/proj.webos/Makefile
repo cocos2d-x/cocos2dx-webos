@@ -1,13 +1,9 @@
 #MAKE FILE FOR WEBOS
 CC      = arm-none-linux-gnueabi-gcc
 CXX     = arm-none-linux-gnueabi-g++
-AR      = arm-none-linux-gnueabi-ar
-RANLIB  = arm-none-linux-gnueabi-ranlib
-
-TARGET	= libcocos2d.a
-CCFLAGS = -Wall -g -O2 
-CXXFLAGS = -Wall -g -O2 
-ARFLAGS = cr
+TARGET	= libcocos2d.so
+CCFLAGS = -Wall -g -O2 -fPIC -Wl,--allow-shlib-undefined
+CXXFLAGS = -Wall -g -O2 -fPIC -Wl,--allow-shlib-undefined
 VISIBILITY = 
 
 INCLUDES = -I.. \
@@ -16,9 +12,9 @@ INCLUDES = -I.. \
 					-I../platform \
 					-I../platform/third_party/WebOS/libxml2 \
 					-I../platform/third_party/WebOS/libjpeg \
-					-I"/opt/PalmPDK/include" \
-					-I"/opt/PalmPDK/include/SDL" \
-					-L"/opt/PalmPDK/device/lib"\
+					-I"C:\Program Files (x86)\HP webOS\PDK\include" \
+					-I"C:\Program Files (x86)\HP webOS\PDK\include\SDL" \
+					-L"C:\Program Files (x86)\HP webOS\PDK\device\lib" \
 					-L../platform/third_party/WebOS/libraries
 
 DEFINES = -DWEBOS
@@ -114,10 +110,11 @@ OBJECTS = ../actions/CCAction.o \
 					../CCScheduler.o \
 					../cocos2d.o 
 
+SHAREDLIBS = -lSDL -lGLES_CM -lpdl -lpthread-2.5 -ljpeg -lpng12 -lz -lxml2
+
 ####### Build rules  $(STATICLIBS)
 $(TARGET): $(OBJECTS) 
-	$(AR) $(ARFLAGS) $(TARGET) $(OBJECTS)
-	$(RANLIB) $(TARGET) 
+	$(CXX) $(CXXFLAGS) $(INCLUDES) $(DEFINES) $(OBJECTS) -shared -o $(TARGET) $(SHAREDLIBS)
 	
 ####### Compile
 %.o: %.cpp

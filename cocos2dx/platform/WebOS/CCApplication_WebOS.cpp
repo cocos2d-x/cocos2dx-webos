@@ -105,13 +105,7 @@ void CCApplication::setAnimationInterval(double interval)
 
 CCApplication::Orientation CCApplication::setOrientation(Orientation orientation)
 {
-    // swap width and height
-    CCEGLView * pView = CCDirector::sharedDirector()->getOpenGLView();
-    if (pView)
-    {
-        return (Orientation)pView->setDeviceOrientation(orientation);
-    }
-    return (Orientation)CCDirector::sharedDirector()->getDeviceOrientation();
+	return orientation;
 }
 
 void CCApplication::statusBarFrame(CCRect * rect)

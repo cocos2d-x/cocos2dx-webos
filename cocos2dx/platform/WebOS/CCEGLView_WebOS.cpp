@@ -79,10 +79,6 @@ public:
 			// use zero for width/height to use maximum resolution
 			pEGL->Surface = SDL_SetVideoMode(0,0, 0, SDL_OPENGL);
 
-   		#if WIN32
-			// Load the desktop OpenGL-ES emulation library
-			//_dgles_load_library(NULL, proc_loader);
-			#endif
 		} while (0);
 
 		return pEGL;
@@ -186,13 +182,19 @@ CCEGLView::~CCEGLView()
 bool CCEGLView::Create(const char* pTitle, int w, int h)
 {
 	bool bRet = false;
+	
+	PDL_ScreenMetrics outMetrics;
+	PDL_GetScreenMetrics(&outMetrics);
+	m_sSizeInPixel.width = outMetrics.horizontalPixels; 
+	m_sSizeInPixel.height = outMetrics.verticalPixels;
+	
 	do 
-	{
+	{        
 		m_eInitOrientation = CCDirector::sharedDirector()->getDeviceOrientation();
         m_bOrientationInitVertical = (CCDeviceOrientationPortrait == m_eInitOrientation
             || kCCDeviceOrientationPortraitUpsideDown == m_eInitOrientation) ? true : false;
         m_sSizeInPoint.width = w;
-        m_sSizeInPoint.height = h;
+        m_sSizeInPoint.height = h;    
         /* WebOS doesnt support resizing the window */ 
 		resize(w, h);
         
@@ -208,9 +210,6 @@ bool CCEGLView::Create(const char* pTitle, int w, int h)
 		s_pMainWindow = this;
 		bRet = true;
 	} while (0);
-
-	m_sSizeInPoint.width = w;
-	m_sSizeInPoint.height = h;
 
 	// calculate the factor and the rect of viewport	
 	m_fScreenScaleFactor =  MIN((float)m_sSizeInPixel.width / m_sSizeInPoint.width,
@@ -273,13 +272,16 @@ long CCEGLView::WindowProc(SDL_EventType message, SDL_Event& Event)
 
 CCSize CCEGLView::getSize()
 {
+//CCSize size(m_sSizeInPoint.width, m_sSizeInPoint.height);
+//	        return size;
+	        
 	PDL_ScreenMetrics outMetrics;
 	
 	PDL_Err error = PDL_GetScreenMetrics(&outMetrics);
 	if (error == PDL_NOERROR)
     	return CCSize(outMetrics.horizontalPixels,outMetrics.verticalPixels);
     else
-    	return CCSize(320,400); //assuming the smallest size, because it will scale up better than down
+    	return CCSize(320,400); //assuming the smallest size, because it will scale up better than down 
 }
 
 bool CCEGLView::isOpenGLReady()
@@ -313,19 +315,42 @@ void CCEGLView::swapBuffers()
 
 int CCEGLView::setDeviceOrientation(int eOritation)
 {
-	do 
+	// Touchpads are landscape by default, so we want to switch properly in that case
+	bool portraitDefault = true;
+	
+	PDL_ScreenMetrics outMetrics;
+	PDL_GetScreenMetrics(&outMetrics);
+	if (outMetrics.horizontalPixels > outMetrics.verticalPixels)
+		portraitDefault = false;		
+	
+	if (eOritation == CCDeviceOrientationPortrait || eOritation == CCDeviceOrientationPortraitUpsideDown)
 	{
-		bool bVertical = (CCDeviceOrientationPortrait == eOritation
-			|| kCCDeviceOrientationPortraitUpsideDown == eOritation) ? true : false;
-
-		CC_BREAK_IF(m_bOrientationReverted && bVertical != m_bOrientationInitVertical);
-		CC_BREAK_IF(! m_bOrientationReverted && bVertical == m_bOrientationInitVertical);
-
-        m_bOrientationReverted = (bVertical == m_bOrientationInitVertical) ? false : true;
-
-        // swap width and height
-
-	} while (0);
+		int width = MIN(m_sSizeInPixel.width, m_sSizeInPixel.height);
+		m_sSizeInPixel.height = MAX(m_sSizeInPixel.width, m_sSizeInPixel.height);
+		m_sSizeInPixel.width = width;
+		width = MIN(m_sSizeInPoint.width, m_sSizeInPoint.height);
+		m_sSizeInPoint.height = MAX(m_sSizeInPoint.width, m_sSizeInPoint.height);
+		m_sSizeInPoint.width = width;
+		resize(m_sSizeInPoint.width, m_sSizeInPoint.height);
+		if (portraitDefault)
+			CCDirector::sharedDirector()->setDeviceOrientation(CCDeviceOrientationPortrait);
+		else
+			CCDirector::sharedDirector()->setDeviceOrientation(CCDeviceOrientationLandscapeLeft);	
+	}
+	else
+	{
+		int width = MAX(m_sSizeInPixel.width, m_sSizeInPixel.height);
+		m_sSizeInPixel.height = MIN(m_sSizeInPixel.width, m_sSizeInPixel.height);
+		m_sSizeInPixel.width = width;
+		width = MAX(m_sSizeInPoint.width, m_sSizeInPoint.height);
+		m_sSizeInPoint.height = MIN(m_sSizeInPoint.width, m_sSizeInPoint.height);
+		m_sSizeInPoint.width = width;
+		resize(m_sSizeInPoint.width, m_sSizeInPoint.height);
+		if (portraitDefault)
+			CCDirector::sharedDirector()->setDeviceOrientation(CCDeviceOrientationLandscapeLeft);
+		else
+			CCDirector::sharedDirector()->setDeviceOrientation(CCDeviceOrientationPortrait);		
+	}
 
 	return m_eInitOrientation;
 }
@@ -333,16 +358,20 @@ int CCEGLView::setDeviceOrientation(int eOritation)
 void CCEGLView::setViewPortInPoints(float x, float y, float w, float h)
 {
     float factor = m_fScreenScaleFactor / CC_CONTENT_SCALE_FACTOR();
-/*        glViewport( (GLint)(x * factor) + m_rcViewPort.origin.x,
-					(GLint)(y * factor) + m_rcViewPort.origin.y,
-					(GLint)(w * factor),
-					(GLint)(h * factor));
-*/					
+/*    glViewport( (GLint)(x * factor) + m_rcViewPort.origin.x,
+		(GLint)(y * factor) + m_rcViewPort.origin.y,
+		(GLint)(w * factor),
+		(GLint)(h * factor)); */
+					
 }
 
 void CCEGLView::setScissorInPoints(float x, float y, float w, float h)
 {
-    
+    float factor = m_fScreenScaleFactor / CC_CONTENT_SCALE_FACTOR();
+/*	glScissor((GLint)(x * factor) + m_rcViewPort.origin.x,
+		(GLint)(y * factor) + m_rcViewPort.origin.y,
+		(GLint)(w * factor),
+		(GLint)(h * factor)); */
 }
 
 void CCEGLView::setIMEKeyboardState(bool /*bOpen*/)
@@ -352,7 +381,14 @@ void CCEGLView::setIMEKeyboardState(bool /*bOpen*/)
 
 void CCEGLView::resize(int width, int height)
 {
-    
+/*	int viewPortW = (int)ceil(width * m_fScreenScaleFactor);
+	int viewPortH = (int)ceil(height * m_fScreenScaleFactor);
+	m_rcViewPort.origin.x = (m_sSizeInPixel.width - viewPortW) / 2;
+	m_rcViewPort.origin.y = (m_sSizeInPixel.height - viewPortH) / 2;
+	m_rcViewPort.size.width = viewPortW;
+	m_rcViewPort.size.height = viewPortH;
+	CCLog("m_rcViewPort.origin.x = %f, y = %f, width = %f, height = %f", \
+	m_rcViewPort.origin.x, m_rcViewPort.origin.y, m_rcViewPort.size.width, m_rcViewPort.size.height);   */
 }
 
 void CCEGLView::centerWindow()
@@ -363,7 +399,7 @@ void CCEGLView::centerWindow()
 void CCEGLView::setScreenScale(float factor)
 {
     CCLog("--- Into setScreenScale ...\n");
-   // m_fScreenScaleFactor = factor;
+//    m_fScreenScaleFactor = factor;
 }
 
 bool CCEGLView::canSetContentScaleFactor()
@@ -373,7 +409,6 @@ bool CCEGLView::canSetContentScaleFactor()
 
 void CCEGLView::setContentScaleFactor(float contentScaleFactor)
 {
-    
 }
 
 CCEGLView& CCEGLView::sharedOpenGLView()
