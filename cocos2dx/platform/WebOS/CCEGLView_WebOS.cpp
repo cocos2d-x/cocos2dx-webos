@@ -273,7 +273,13 @@ long CCEGLView::WindowProc(SDL_EventType message, SDL_Event& Event)
 
 CCSize CCEGLView::getSize()
 {
-    return CCSize(1024,768);
+	PDL_ScreenMetrics outMetrics;
+	
+	PDL_Err error = PDL_GetScreenMetrics(&outMetrics);
+	if (error == PDL_NOERROR)
+    	return CCSize(outMetrics.horizontalPixels,outMetrics.verticalPixels);
+    else
+    	return CCSize(320,400); //assuming the smallest size, because it will scale up better than down
 }
 
 bool CCEGLView::isOpenGLReady()
