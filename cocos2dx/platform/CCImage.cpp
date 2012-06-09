@@ -155,11 +155,7 @@ bool CCImage::_initWithJpgData(void * data, int nSize)
 	// The version of libjpeg in WebOS doesn't have jpeg_mem_src
 #if (CC_TARGET_PLATFORM == CC_PLATFORM_WEBOS)
 		FILE * source = fmemopen(data, nSize, "rb");
-		if (source == NULL)
-		{
-    		fprintf(stderr, "Calling fmemopen() has failed.\n");
-    		exit(1);
-		}
+		CC_BREAK_IF(source == NULL);
 
 		jpeg_stdio_src(&cinfo, source);
 
@@ -229,7 +225,7 @@ bool CCImage::_initWithPngData(void * pData, int nDatalen)
     {
         // png header len is 8 bytes
     	CC_BREAK_IF(nDatalen < 8);
-
+    	
         // check the data is png or not
         memcpy(header, pData, 8);
         CC_BREAK_IF(png_sig_cmp(header, 0, 8));
