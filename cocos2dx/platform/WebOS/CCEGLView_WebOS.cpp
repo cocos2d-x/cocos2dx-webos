@@ -65,7 +65,7 @@ public:
 		CCEGL * pEGL = new CCEGL;
 		do 
 		{
-			SDL_Init(SDL_INIT_VIDEO | SDL_INIT_NOPARACHUTE);
+			SDL_Init(SDL_INIT_VIDEO | SDL_INIT_NOPARACHUTE | SDL_INIT_JOYSTICK );
 			atexit(SDL_Quit);
     
 			// start the PDL library
@@ -78,7 +78,6 @@ public:
 			// Set the video mode to full screen with OpenGL-ES support
 			// use zero for width/height to use maximum resolution
 			pEGL->Surface = SDL_SetVideoMode(0,0, 0, SDL_OPENGL);
-
 		} while (0);
 
 		return pEGL;
@@ -86,21 +85,7 @@ public:
 
 	void resizeSurface()
 	{
-//  		if (! m_eglNativeWindow || EGL_NO_DISPLAY == m_eglDisplay)
-//  		{
-//  			return;
-//  		}
-//  
-//  		// release old surface
-//  		if (EGL_NO_SURFACE != m_eglSurface)
-//  		{
-//  			eglDestroySurface(m_eglDisplay, m_eglSurface);
-//  			m_eglSurface = EGL_NO_SURFACE;
-//  		}
-//  
-//  		// create new surface and make current
-//  		m_eglSurface = eglCreateWindowSurface(m_eglDisplay, m_eglConfig, m_eglNativeWindow, NULL);
-//  		eglMakeCurrent(m_eglDisplay, m_eglSurface, m_eglSurface, m_eglContext);
+
 	}
 	void Test_Display(void )
 {
@@ -230,7 +215,7 @@ long CCEGLView::WindowProc(SDL_EventType message, SDL_Event& Event)
 {
     static int xLast = 0x0;
 	static int yLast = 0x0;	
-	
+
     switch(message){
 		case SDL_MOUSEBUTTONDOWN:
 			 CCLog("--- SDL_MOUSEBUTTONDOWN X= %d,m_rcViewPort.origin.x = %d,y=%d,m_fScreenScaleFactor=%d \n",Event.button.x,m_rcViewPort.origin.x,Event.button.y,m_fScreenScaleFactor);
@@ -263,6 +248,8 @@ long CCEGLView::WindowProc(SDL_EventType message, SDL_Event& Event)
 			m_pTouch->SetTouchInfo(0, (float)(Event.button.x - m_rcViewPort.origin.x),(float)(Event.button.y - m_rcViewPort.origin.x));
 			m_pDelegate->touchesMoved(m_pSet, NULL);
 			}
+			
+			break;		
 		default:
 			break;
 				
@@ -272,9 +259,6 @@ long CCEGLView::WindowProc(SDL_EventType message, SDL_Event& Event)
 
 CCSize CCEGLView::getSize()
 {
-//CCSize size(m_sSizeInPoint.width, m_sSizeInPoint.height);
-//	        return size;
-	        
 	PDL_ScreenMetrics outMetrics;
 	
 	PDL_Err error = PDL_GetScreenMetrics(&outMetrics);
@@ -358,37 +342,22 @@ int CCEGLView::setDeviceOrientation(int eOritation)
 void CCEGLView::setViewPortInPoints(float x, float y, float w, float h)
 {
     float factor = m_fScreenScaleFactor / CC_CONTENT_SCALE_FACTOR();
-/*    glViewport( (GLint)(x * factor) + m_rcViewPort.origin.x,
-		(GLint)(y * factor) + m_rcViewPort.origin.y,
-		(GLint)(w * factor),
-		(GLint)(h * factor)); */
-					
 }
 
 void CCEGLView::setScissorInPoints(float x, float y, float w, float h)
 {
     float factor = m_fScreenScaleFactor / CC_CONTENT_SCALE_FACTOR();
-/*	glScissor((GLint)(x * factor) + m_rcViewPort.origin.x,
-		(GLint)(y * factor) + m_rcViewPort.origin.y,
-		(GLint)(w * factor),
-		(GLint)(h * factor)); */
 }
 
 void CCEGLView::setIMEKeyboardState(bool /*bOpen*/)
 {
+
 }
 
 
 void CCEGLView::resize(int width, int height)
 {
-/*	int viewPortW = (int)ceil(width * m_fScreenScaleFactor);
-	int viewPortH = (int)ceil(height * m_fScreenScaleFactor);
-	m_rcViewPort.origin.x = (m_sSizeInPixel.width - viewPortW) / 2;
-	m_rcViewPort.origin.y = (m_sSizeInPixel.height - viewPortH) / 2;
-	m_rcViewPort.size.width = viewPortW;
-	m_rcViewPort.size.height = viewPortH;
-	CCLog("m_rcViewPort.origin.x = %f, y = %f, width = %f, height = %f", \
-	m_rcViewPort.origin.x, m_rcViewPort.origin.y, m_rcViewPort.size.width, m_rcViewPort.size.height);   */
+
 }
 
 void CCEGLView::centerWindow()
