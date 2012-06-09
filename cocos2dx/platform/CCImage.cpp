@@ -152,17 +152,8 @@ bool CCImage::_initWithJpgData(void * data, int nSize)
         /* setup decompression process and source, then read JPEG header */
         jpeg_create_decompress( &cinfo );
 
-	// The version of libjpeg in WebOS doesn't have jpeg_mem_src
-#if (CC_TARGET_PLATFORM == CC_PLATFORM_WEBOS)
-		FILE * source = fmemopen(data, nSize, "rb");
-		CC_BREAK_IF(source == NULL);
+		jpeg_mem_src( &cinfo, (unsigned char *) data, nSize );
 
-		jpeg_stdio_src(&cinfo, source);
-
-		fclose(source);
-#else
-        jpeg_mem_src( &cinfo, (unsigned char *) data, nSize );
-#endif
         /* reading the image header which contains image information */
         jpeg_read_header( &cinfo, true );
 
