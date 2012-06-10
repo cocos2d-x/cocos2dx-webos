@@ -36,9 +36,7 @@
 #include "KeypadTest/KeypadTest.h"
 #include "PerformanceTest/PerformanceTest.h"
 #include "ZwoptexTest/ZwoptexTest.h"
-#if (CC_TARGET_PLATFORM != CC_PLATFORM_WEBOS)
 #include "CocosDenshionTest/CocosDenshionTest.h"
-#endif
 #include "CurlTest/CurlTest.h"
 #include "UserDefaultTest/UserDefaultTest.h"
 #include "DirectorTest/DirectorTest.h"
