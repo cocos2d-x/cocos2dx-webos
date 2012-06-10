@@ -218,7 +218,7 @@ long CCEGLView::WindowProc(SDL_EventType message, SDL_Event& Event)
 
     switch(message){
 		case SDL_MOUSEBUTTONDOWN:
-			 CCLog("--- SDL_MOUSEBUTTONDOWN X= %d,m_rcViewPort.origin.x = %d,y=%d,m_fScreenScaleFactor=%d \n",Event.button.x,m_rcViewPort.origin.x,Event.button.y,m_fScreenScaleFactor);
+			 //CCLog("--- SDL_MOUSEBUTTONDOWN X= %d,m_rcViewPort.origin.x = %d,y=%d,m_fScreenScaleFactor=%d \n",Event.button.x,m_rcViewPort.origin.x,Event.button.y,m_fScreenScaleFactor);
 			 m_pTouch->SetTouchInfo(0, (float)(Event.button.x - m_rcViewPort.origin.x) ,
 						(float)(Event.button.y - m_rcViewPort.origin.y) );
 			 m_pSet->addObject(m_pTouch);
@@ -228,7 +228,7 @@ long CCEGLView::WindowProc(SDL_EventType message, SDL_Event& Event)
 		case SDL_MOUSEBUTTONUP:
 			if(m_bCaptured == true) {
 			m_bCaptured = false;
-			CCLog("--- SDL_MOUSEBUTTONUP X= %d,m_rcViewPort.origin.x = %d,y=%d,m_fScreenScaleFactor=%d \n",Event.button.x,m_rcViewPort.origin.x,Event.button.y,m_fScreenScaleFactor);
+			//CCLog("--- SDL_MOUSEBUTTONUP X= %d,m_rcViewPort.origin.x = %d,y=%d,m_fScreenScaleFactor=%d \n",Event.button.x,m_rcViewPort.origin.x,Event.button.y,m_fScreenScaleFactor);
 			m_pTouch->SetTouchInfo(0, (float)(Event.button.x - m_rcViewPort.origin.x) ,
                 (float)(Event.button.y - m_rcViewPort.origin.y));
 			m_pDelegate->touchesEnded(m_pSet, NULL);
@@ -244,7 +244,7 @@ long CCEGLView::WindowProc(SDL_EventType message, SDL_Event& Event)
 			xLast=Event.button.x;
 			yLast=Event.button.y;            				
             /* Tracking Mouse Move with Left Button */
-			CCLog("--- SDL_MOUSEMOTION(which=%d,state=%d,) X= %d,y=%d,m_fScreenScaleFactor=%d \n",Event.motion.which,Event.motion.state,Event.button.x,Event.button.y,m_fScreenScaleFactor);
+			//CCLog("--- SDL_MOUSEMOTION(which=%d,state=%d,) X= %d,y=%d,m_fScreenScaleFactor=%d \n",Event.motion.which,Event.motion.state,Event.button.x,Event.button.y,m_fScreenScaleFactor);
 			m_pTouch->SetTouchInfo(0, (float)(Event.button.x - m_rcViewPort.origin.x),(float)(Event.button.y - m_rcViewPort.origin.x));
 			m_pDelegate->touchesMoved(m_pSet, NULL);
 			}
