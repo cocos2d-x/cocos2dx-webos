@@ -1,3 +1,6 @@
+#ignore box2d and chipmunk builds
+libbox2d.a
+libchipmunk.a
 
 #ignore thumbnails created by windows
 Thumbs.db

@@ -172,12 +172,12 @@ public:
 			return false;
 		}
 		do {
-			CCLog("\n\n ---- FT_New_Face with pFontName = %s\n", pFontName);
+			//CCLog("\n\n ---- FT_New_Face with pFontName = %s\n", pFontName);
 			iError = FT_New_Face( library, pFontName, 0, &face );
 
 			if (iError) {
 				//no valid font found use default
-				CCLog("\n\n ---- no valid font, use default %s\n", pFontName);
+				//CCLog("\n\n ---- no valid font, use default %s\n", pFontName);
 				iError = FT_New_Face( library, "/usr/share/fonts/arial.ttf", 0, &face );
 			}
 			CC_BREAK_IF(iError);
@@ -320,7 +320,7 @@ bool CCImage::initWithString(
 		BitmapDC &dc = sharedBitmapDC();
 
 		const char* pFullFontName = CCFileUtils::fullPathFromRelativePath(pFontName);
-		CCLog("-----pText=%s and Font File is %s nWidth= %d,nHeight=%d",pText,pFullFontName,nWidth,nHeight);
+		//CCLog("-----pText=%s and Font File is %s nWidth= %d,nHeight=%d",pText,pFullFontName,nWidth,nHeight);
 		
 		CC_BREAK_IF(! dc.getBitmap(pText, nWidth, nHeight, eAlignMask, pFullFontName, nSize));
 		//CCLog("---- dc.getBitmap is Succesfull... \n");

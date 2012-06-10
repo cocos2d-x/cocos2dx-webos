@@ -152,6 +152,9 @@ public:
 private:
 
 	void init();
+	
+	Mix_Music *pMusic;
+	string currentMusic;
 };
 
 } /* namespace CocosDenshion */

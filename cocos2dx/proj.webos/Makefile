@@ -71,6 +71,8 @@ OBJECTS = ../actions/CCAction.o \
 					../platform/platform.o \
 					../platform/WebOS/CCApplication_WebOS.o \
 					../platform/WebOS/CCEGLView_WebOS.o \
+					../platform/WebOS/CCFileUtils_WebOS.o \
+					../platform/WebOS/CCAccelerometer_WebOS.o \
 					../script_support/CCScriptSupport.o \
 					../sprite_nodes/CCAnimation.o \
 					../sprite_nodes/CCAnimationCache.o \

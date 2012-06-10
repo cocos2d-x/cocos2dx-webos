@@ -93,10 +93,8 @@ static TestScene* CreateTestScene(int nIdx)
     case TEST_KEYPAD:
         pScene = new KeypadTestScene(); break;
 #endif
-#if (CC_TARGET_PLATFORM != CC_PLATFORM_WEBOS)
 	case TEST_COCOSDENSHION:
 		pScene = new CocosDenshionTestScene(); break;
-#endif
     case TEST_PERFORMANCE:
         pScene = new PerformanceTestScene(); break;
     case TEST_ZWOPTEX:

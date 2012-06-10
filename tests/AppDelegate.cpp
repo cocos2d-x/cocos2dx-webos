@@ -91,13 +91,15 @@ bool AppDelegate::initInstance()
 		CC_BREAK_IF(! pMainWnd|| ! pMainWnd->Create(480, 320));
 		CCFileUtils::setResourcePath("app/native/Resource");
 #endif // CC_PLATFORM_QNX
+
 #if (CC_TARGET_PLATFORM == CC_PLATFORM_WEBOS)
 		CCEGLView * pMainWnd = new CCEGLView();
-		CC_BREAK_IF(! pMainWnd|| ! pMainWnd->Create("cocos2d: Hello World", 1024, 768));
-		//CC_BREAK_IF(! pMainWnd|| ! pMainWnd->Create("cocos2d: Hello World", 800,480 ));
+		
+		CC_BREAK_IF(! pMainWnd|| ! pMainWnd->Create("cocos2d: tests", 1024, 768));
+		pMainWnd->setDeviceOrientation(CCDeviceOrientationLandscapeLeft);
 
 		CCFileUtils::setResourcePath("./Res/");
-#endif // CC_PLATFORM_QNX
+#endif // CC_PLATFORM_WEBOS
 
         bRet = true;
     } while (0);

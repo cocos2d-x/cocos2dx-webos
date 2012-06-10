@@ -22,8 +22,13 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 ****************************************************************************/
 
-#ifndef __PLATFORM_WIN32_UIACCELEROMETER_H__
-#define __PLATFORM_WIN32_UIACCELEROMETER_H__
+#ifndef __PLATFORM_WEBOS_UIACCELEROMETER_H__
+#define __PLATFORM_WEBOS_UIACCELEROMETER_H__
+
+#include "SDL.h"
+
+#include "CCCommon.h"
+#include "CCAccelerometerDelegate.h"
 
 namespace   cocos2d {
 
@@ -33,8 +38,14 @@ public:
     CCAccelerometer();
     ~CCAccelerometer();
 
-    static CCAccelerometer* sharedAccelerometer() { return NULL; }
-    void setDelegate(CCAccelerometerDelegate* pDelegate) {CC_UNUSED_PARAM(pDelegate);}
+    static CCAccelerometer* sharedAccelerometer(); 
+    void setDelegate(CCAccelerometerDelegate* pDelegate);
+    void update(SDL_Joystick *joystick, long sensorTimeStamp);
+    
+private:
+	static CCAccelerometer*  m_spCCAccelerometer;
+	CCAccelerometerDelegate* m_pAccelDelegate;
+	CCAcceleration 			 m_accelerationValue;    
 };
 
 }//namespace   cocos2d 
