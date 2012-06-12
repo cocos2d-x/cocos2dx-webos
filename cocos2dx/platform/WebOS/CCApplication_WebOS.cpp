@@ -1,4 +1,5 @@
 #include "CCApplication.h"
+#include "CCAccelerometer.h"
 
 #include "CCDirector.h"
 #include "SDL.h"
@@ -40,6 +41,7 @@ int CCApplication::run()
         return 0;
     }
     
+    SDL_Joystick *joystick = SDL_JoystickOpen(0);
 	
     CCEGLView& mainWnd = CCEGLView::sharedOpenGLView();
     mainWnd.centerWindow();
@@ -47,15 +49,11 @@ int CCApplication::run()
 	 SDL_Event Event;
 	 while (1) {
         bool gotEvent;
-#if (CC_TARGET_PLATFORM == CC_PLATFORM_WEBOS)
-//		 CCLog("--- Calling SDL_PollEvent \n");
-		 SDL_PollEvent(&Event);
-#else 
-		 CCLog(" --- Calling SDL_WaitEvent \n");
-		 SDL_WaitEvent(&Event);
-#endif
-//		  CCLog("--- GOT NEW EVENT .... \n");
-		 switch (Event.type) {
+        
+        // without the inner while loop, input performance gets really laggy    	        
+		while ( SDL_PollEvent(&Event) ) {  
+//		CCLog("--- GOT NEW EVENT .... \n");
+		 	switch (Event.type) {
                 case SDL_KEYDOWN:
                     switch (Event.key.keysym.sym) {
                         case PDLK_GESTURE_BACK: /* also maps to ESC */
@@ -86,13 +84,16 @@ int CCApplication::run()
                     // all shutdown code is registered via atexit() so this is clean.
                     exit(0);
                     break;
-
+                case SDL_JOYAXISMOTION:
+                	CCAccelerometer::sharedAccelerometer()->update(joystick, time(NULL));
+                	break;
                 default:
                     break;
             }
-		   // Get current time tick.
-            // If it's the time to draw next frame, draw it, else sleep a while.
-            CCDirector::sharedDirector()->mainLoop();
+        }
+		// Get current time tick.
+        // If it's the time to draw next frame, draw it, else sleep a while.
+        CCDirector::sharedDirector()->mainLoop();
      }
 
     return (int) 0;
@@ -105,13 +106,7 @@ void CCApplication::setAnimationInterval(double interval)
 
 CCApplication::Orientation CCApplication::setOrientation(Orientation orientation)
 {
-    // swap width and height
-    CCEGLView * pView = CCDirector::sharedDirector()->getOpenGLView();
-    if (pView)
-    {
-        return (Orientation)pView->setDeviceOrientation(orientation);
-    }
-    return (Orientation)CCDirector::sharedDirector()->getDeviceOrientation();
+	return orientation;
 }
 
 void CCApplication::statusBarFrame(CCRect * rect)

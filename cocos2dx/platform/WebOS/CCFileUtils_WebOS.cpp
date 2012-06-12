@@ -1,5 +1,5 @@
 /*
- * CCFileUtils_Linux.cpp
+ * CCFileUtils_WebOS.cpp
  *
  *  Created on: Aug 9, 2011
  *      Author: laschweinski
@@ -34,12 +34,7 @@ void CCFileUtils::setResourcePath(const char* pszResourcePath) {
 
 
 const char* CCFileUtils::fullPathFromRelativePath(const char *pszRelativePath) {
-	CCString *pRet = new CCString();
-	pRet->autorelease();
-	pRet->m_sString = s_strResourcePath + pszRelativePath;
-//	CCLog("--- Into fullPathFromRelativePath %s %s ...\n",pszRelativePath,pRet->m_sString.c_str());
-	return pRet->m_sString.c_str();
-
+	return pszRelativePath;
 }
 
 const char *CCFileUtils::fullPathFromRelativeFile(const char *pszFilename, const char *pszRelativeFile) {

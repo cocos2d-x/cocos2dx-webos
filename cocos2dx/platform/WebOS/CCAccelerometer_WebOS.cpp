@@ -22,32 +22,56 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 ****************************************************************************/
 
-#ifndef __PLATFORM_WEBOS_UIACCELEROMETER_H__
-#define __PLATFORM_WEBOS_UIACCELEROMETER_H__
-
 #include "SDL.h"
+#include "PDL.h"
 
-#include "CCCommon.h"
-#include "CCAccelerometerDelegate.h"
+#include "CCAccelerometer_WebOS.h"
 
-namespace   cocos2d {
-
-class CC_DLL CCAccelerometer
+namespace cocos2d
 {
-public:
-    CCAccelerometer();
-    ~CCAccelerometer();
+	CCAccelerometer* CCAccelerometer::m_spCCAccelerometer = NULL;
 
-    static CCAccelerometer* sharedAccelerometer(); 
-    void setDelegate(CCAccelerometerDelegate* pDelegate);
-    void update(SDL_Joystick *joystick, long sensorTimeStamp);
-    
-private:
-	static CCAccelerometer*  m_spCCAccelerometer;
-	CCAccelerometerDelegate* m_pAccelDelegate;
-	CCAcceleration 			 m_accelerationValue;    
-};
+	CCAccelerometer::CCAccelerometer() : m_pAccelDelegate(NULL)
+	{
+	}
 
-}//namespace   cocos2d 
+    CCAccelerometer::~CCAccelerometer() 
+	{
+		m_spCCAccelerometer = NULL;
+    }
 
-#endif
+    CCAccelerometer* CCAccelerometer::sharedAccelerometer() 
+	{
+    	if (m_spCCAccelerometer == NULL)
+    	{
+    		m_spCCAccelerometer = new CCAccelerometer();
+    	}
+    	
+    	return m_spCCAccelerometer;
+    }
+
+    void CCAccelerometer::setDelegate(CCAccelerometerDelegate* pDelegate)
+    {
+    	m_pAccelDelegate = pDelegate;
+    }
+
+	void CCAccelerometer::update(SDL_Joystick *joystick, long timeStamp)
+	{		
+		if ( m_pAccelDelegate != NULL)
+		{
+			double x, y, z;
+
+			x = SDL_JoystickGetAxis(joystick, 0) / 32768.0;
+			y = SDL_JoystickGetAxis(joystick, 1) / 32768.0;
+			z = SDL_JoystickGetAxis(joystick, 2) / 32768.0;
+			m_accelerationValue.x = x;
+			m_accelerationValue.y = -y;
+			m_accelerationValue.z = z;
+			m_accelerationValue.timestamp = (double)timeStamp;
+
+			m_pAccelDelegate->didAccelerate(&m_accelerationValue);
+		}
+	}
+
+} // end of namespace cococs2d
+

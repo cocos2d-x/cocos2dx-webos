@@ -15,7 +15,7 @@ INCLUDES = -I../ \
 					-I../../ \
 					-I"C:\Program Files (x86)\HP webOS\PDK\include" \
 					-I"C:\Program Files (x86)\HP webOS\PDK\include\SDL" \
-					-L"C:\Program Files (x86)\HP webOS\PDK\device\lib"
+					-L"C:\Program Files (x86)\HP webOS\PDK\device\lib" 
 
 DEFINES = -DWEBOS
 
