@@ -62,7 +62,6 @@ OBJECTS = ../actions/CCAction.o \
 					../particle_nodes/CCParticleSystem.o \
 					../particle_nodes/CCParticleSystemQuad.o \
 					../platform/CCCommon.o \
-					../platform/CCFileUtils.o \
 					../platform/CCGL.o \
 					../platform/CCImage.o \
 					../platform/CCSAXParser.o \

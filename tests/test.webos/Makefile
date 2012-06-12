@@ -103,16 +103,16 @@ OBJECTS = ../tests/AccelerometerTest/AccelerometerTest.o \
 					../tests/controller.o \
 					../tests/testBasic.o \
 					../AppDelegate.o \
-					./main.o 
-					
-#../tests/CocosDenshionTest/CocosDenshionTest.o \
+					./main.o \
+../tests/CocosDenshionTest/CocosDenshionTest.o \
+
 STATICLIBS_DIR = ../../cocos2dx/platform/third_party/linux/libraries
 STATICLIBS =  ../../Box2D/proj.webos/libbox2d.a \
 							../../chipmunk/proj.webos/libchipmunk.a
 							
 							
 #SHAREDLIBS = -L../../lib/linux/Debug -lcocos2d -lrt -lz -lcocosdenshion -Wl,-rpath,../../lib/linux/Debug/
-SHAREDLIBS = -L../../cocos2dx/proj.webos/ -lcocos2d -lcurl -lGLES_CM
+SHAREDLIBS = -L../../cocos2dx/proj.webos/ -lcocos2d -lcurl -lGLES_CM -L../../CocosDenshion/proj.webos/ -lcocosdenshion
 
 ####### Build rules
 $(TARGET): $(OBJECTS) 
