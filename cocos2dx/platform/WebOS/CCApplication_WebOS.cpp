@@ -106,6 +106,28 @@ void CCApplication::setAnimationInterval(double interval)
 
 CCApplication::Orientation CCApplication::setOrientation(Orientation orientation)
 {
+	// Touchpads are landscape by default, so we want to switch properly in that case
+	bool portraitDefault = true;
+	
+	PDL_ScreenMetrics outMetrics;
+	PDL_GetScreenMetrics(&outMetrics);
+	if (outMetrics.horizontalPixels > outMetrics.verticalPixels)
+		portraitDefault = false;
+		
+	if (orientation == kOrientationPortrait) {
+		if (!portraitDefault)
+			orientation = kOrientationLandscapeLeft;
+	} else if (orientation == kOrientationPortraitUpsideDown) {
+		if (!portraitDefault)
+			orientation = kOrientationLandscapeRight;	
+	} else if (orientation == kOrientationLandscapeLeft){ 
+		if (!portraitDefault)
+			orientation = kOrientationPortrait;
+	} else {
+		if (!portraitDefault)
+			orientation = kOrientationPortraitUpsideDown;	
+	}	
+	
 	return orientation;
 }
 

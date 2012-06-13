@@ -298,15 +298,7 @@ void CCEGLView::swapBuffers()
 }
 
 int CCEGLView::setDeviceOrientation(int eOritation)
-{
-	// Touchpads are landscape by default, so we want to switch properly in that case
-	bool portraitDefault = true;
-	
-	PDL_ScreenMetrics outMetrics;
-	PDL_GetScreenMetrics(&outMetrics);
-	if (outMetrics.horizontalPixels > outMetrics.verticalPixels)
-		portraitDefault = false;		
-	
+{	
 	if (eOritation == CCDeviceOrientationPortrait || eOritation == CCDeviceOrientationPortraitUpsideDown)
 	{
 		int width = MIN(m_sSizeInPixel.width, m_sSizeInPixel.height);
@@ -316,10 +308,7 @@ int CCEGLView::setDeviceOrientation(int eOritation)
 		m_sSizeInPoint.height = MAX(m_sSizeInPoint.width, m_sSizeInPoint.height);
 		m_sSizeInPoint.width = width;
 		resize(m_sSizeInPoint.width, m_sSizeInPoint.height);
-		if (portraitDefault)
-			CCDirector::sharedDirector()->setDeviceOrientation(CCDeviceOrientationPortrait);
-		else
-			CCDirector::sharedDirector()->setDeviceOrientation(CCDeviceOrientationLandscapeLeft);	
+		CCDirector::sharedDirector()->setDeviceOrientation(CCDeviceOrientationPortrait);
 	}
 	else
 	{
@@ -330,10 +319,7 @@ int CCEGLView::setDeviceOrientation(int eOritation)
 		m_sSizeInPoint.height = MIN(m_sSizeInPoint.width, m_sSizeInPoint.height);
 		m_sSizeInPoint.width = width;
 		resize(m_sSizeInPoint.width, m_sSizeInPoint.height);
-		if (portraitDefault)
-			CCDirector::sharedDirector()->setDeviceOrientation(CCDeviceOrientationLandscapeLeft);
-		else
-			CCDirector::sharedDirector()->setDeviceOrientation(CCDeviceOrientationPortrait);		
+		CCDirector::sharedDirector()->setDeviceOrientation(CCDeviceOrientationLandscapeLeft);
 	}
 
 	return m_eInitOrientation;
