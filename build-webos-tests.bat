@@ -25,7 +25,7 @@ cs-make
 copy cocos2dx-test ..\..\testsWebos\
 
 cd ..\
-xcopy Res ..\testsWebos\Res\
+xcopy /E Res ..\testsWebos\Res\
 copy Res\Images\Icon.png ..\testsWebos\
 cd ..\testsWebos\
 
