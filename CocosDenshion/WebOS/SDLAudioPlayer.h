@@ -153,8 +153,10 @@ private:
 
 	void init();
 	
+	map<string, Mix_Chunk*> mapEffectSound;
 	Mix_Music *pMusic;
 	string currentMusic;
+	int iEffectsVolume;
 };
 
 } /* namespace CocosDenshion */
