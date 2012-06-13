@@ -43,9 +43,7 @@ SDLAudioPlayer* SDLAudioPlayer::sharedPlayer() {
 }
 
 
-SDLAudioPlayer::SDLAudioPlayer() //:
-		//pMusic(0), pBGMChannel(0), iSoundChannelCount(0) 
-        {
+SDLAudioPlayer::SDLAudioPlayer() {
 	init();
 }
 
@@ -62,6 +60,7 @@ void SDLAudioPlayer::init() {
     	
     pMusic = NULL;
     currentMusic = "";
+    iEffectsVolume = 64;
 }
 
 void SDLAudioPlayer::close() {
@@ -76,7 +75,7 @@ SDLAudioPlayer::~SDLAudioPlayer() {
 // BGM
 void SDLAudioPlayer::preloadBackgroundMusic(const char* pszFilePath) {
 	currentMusic = fullPathFromRelativePath(pszFilePath);
-	printf("stringis %s", currentMusic.c_str());
+
 	// free old music
 	if (pMusic != NULL)
 		stopBackgroundMusic(true);
@@ -84,7 +83,7 @@ void SDLAudioPlayer::preloadBackgroundMusic(const char* pszFilePath) {
 	// load new music
 	pMusic = Mix_LoadMUS(currentMusic.c_str());
 	if (!pMusic)
-		printf("Unable to load %s: %s", currentMusic.c_str(), Mix_GetError());
+		printf("Unable to load music file %s: %s", currentMusic.c_str(), Mix_GetError());
 }
 
 void SDLAudioPlayer::playBackgroundMusic(const char* pszFilePath, bool bLoop) {
@@ -125,7 +124,7 @@ bool SDLAudioPlayer::willPlayBackgroundMusic() {
 }
 
 bool SDLAudioPlayer::isBackgroundMusicPlaying() {
-	return Mix_PlayingMusic();
+	return (Mix_PlayingMusic() && !Mix_PausedMusic());
 }
 
 float SDLAudioPlayer::getBackgroundMusicVolume() {
@@ -147,39 +146,73 @@ void SDLAudioPlayer::setBackgroundMusicVolume(float volume) {
 
 // for sound effects
 float SDLAudioPlayer::getEffectsVolume() {
-	float fVolumn = 1.0f;
-    return fVolumn;
+	float fVolume = iEffectsVolume / 128.0;
+
+	return fVolume;
 }
 
 void SDLAudioPlayer::setEffectsVolume(float volume) {
+	iEffectsVolume = volume * 128;
+	if (iEffectsVolume > 128) 
+		iEffectsVolume = 128;
+	else if (iEffectsVolume < 0)
+		iEffectsVolume = 0;
+		
+	Mix_Volume(-1, iEffectsVolume);
 }
 
 unsigned int SDLAudioPlayer::playEffect(const char* pszFilePath, bool bLoop) {
-	return 0;
+	if(mapEffectSound.find(pszFilePath) == mapEffectSound.end())
+		preloadEffect(pszFilePath);
+
+	Mix_VolumeChunk( mapEffectSound[pszFilePath], iEffectsVolume);
+	int loop = bLoop ? -1 : 1;
+	int iRet = Mix_PlayChannel(-1, mapEffectSound[pszFilePath], loop);
+	if (iRet == -1) {
+		printf("Error playing %s: %s\n", pszFilePath, Mix_GetError());
+		return 0;
+	} else {
+		return iRet;
+	}
 }
 
 void SDLAudioPlayer::stopEffect(unsigned int nSoundId) {
+	Mix_HaltChannel(nSoundId);
 }
 
 void SDLAudioPlayer::pauseEffect(unsigned int uSoundId) {
+	Mix_Pause(uSoundId);
 }
 
 void SDLAudioPlayer::pauseAllEffects() {
+	Mix_Pause(-1);
 }
 
 void SDLAudioPlayer::resumeEffect(unsigned int uSoundId) {
+	Mix_Resume(uSoundId);
 }
 
 void SDLAudioPlayer::resumeAllEffects() {
+	Mix_Resume(-1);
 }
 
 void SDLAudioPlayer::stopAllEffects() {
+	Mix_HaltChannel(-1);
 }
 
 void SDLAudioPlayer::preloadEffect(const char* pszFilePath) {
+	string filePath = fullPathFromRelativePath(pszFilePath);
+
+	mapEffectSound[pszFilePath] = Mix_LoadWAV(filePath.c_str());
+	if (!mapEffectSound[pszFilePath])
+		printf("Unable to load sound file %s: %s", currentMusic.c_str(), Mix_GetError());
 }
 
 void SDLAudioPlayer::unloadEffect(const char* pszFilePath) {
+	if(mapEffectSound.find(pszFilePath) != mapEffectSound.end()) {
+		Mix_FreeChunk(mapEffectSound[pszFilePath]);
+		mapEffectSound.erase(pszFilePath);
+	}
 }
 
 //~for sound effects
