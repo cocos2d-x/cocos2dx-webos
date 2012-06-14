@@ -34,7 +34,12 @@ void CCFileUtils::setResourcePath(const char* pszResourcePath) {
 
 
 const char* CCFileUtils::fullPathFromRelativePath(const char *pszRelativePath) {
-	return pszRelativePath;
+	CCString *pRet = new CCString();
+	pRet->autorelease();
+	pRet->m_sString = s_strResourcePath + pszRelativePath;
+//	CCLog("--- Into fullPathFromRelativePath %s %s ...\n",pszRelativePath,pRet->m_sString.c_str());
+	return pRet->m_sString.c_str();
+
 }
 
 const char *CCFileUtils::fullPathFromRelativeFile(const char *pszFilename, const char *pszRelativeFile) {

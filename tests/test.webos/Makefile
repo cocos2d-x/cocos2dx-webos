@@ -15,7 +15,7 @@ INCLUDES = -I../ \
 					-I../../ \
 					-I"C:\Program Files (x86)\HP webOS\PDK\include" \
 					-I"C:\Program Files (x86)\HP webOS\PDK\include\SDL" \
-					-L"C:\Program Files (x86)\HP webOS\PDK\device\lib" 
+					-L"C:\Program Files (x86)\HP webOS\PDK\device\lib"
 
 DEFINES = -DWEBOS
 
@@ -104,8 +104,8 @@ OBJECTS = ../tests/AccelerometerTest/AccelerometerTest.o \
 					../tests/testBasic.o \
 					../AppDelegate.o \
 					./main.o \
-../tests/CocosDenshionTest/CocosDenshionTest.o \
-
+					../tests/CocosDenshionTest/CocosDenshionTest.o
+                    
 STATICLIBS_DIR = ../../cocos2dx/platform/third_party/linux/libraries
 STATICLIBS =  ../../Box2D/proj.webos/libbox2d.a \
 							../../chipmunk/proj.webos/libchipmunk.a

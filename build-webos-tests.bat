@@ -29,9 +29,14 @@ xcopy /E Res ..\testsWebos\Res\
 copy Res\Images\Icon.png ..\testsWebos\
 cd ..\testsWebos\
 
-@echo {"title": "cocos2dx-test","type": "pdk","main": "cocos2dx-test","icon": "Icon.png","id": "com.palm.app.cocos2dx-test",	"version": "1.3.0",	"vendor": "My","requiredMemory": 15} >appinfo.json
-@echo filemode.755=cocos2dx-test>package.properties
+@echo {"title": "cocos2dx-test","type": "pdk","main": "cocos2dx-test","icon": "Icon.png","id": "com.palm.app.cocos2dx-test",	"version": "1.3.0",	"vendor": "My","requiredMemory": 100} >appinfo.json
+@echo filemode.755=cocos2dx-test, libcocos2d.so, libcocosdenshion.so, libbox2d.a, libchipmunk.a>package.properties
 cd ..\
+del /Q Box2D\proj.webos\libbox2d.a
+del /Q chipmunk\proj.webos\libchipmunk.a
+del /Q cocos2dx\proj.webos\libcocos2d.so
+del /Q CocosDenshion\proj.webos\libcocosdenshion.so
+del /Q tests\test.webos\cocos2dx-test
 palm-package testsWebos
 
 pause

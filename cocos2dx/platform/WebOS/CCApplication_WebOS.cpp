@@ -52,8 +52,8 @@ int CCApplication::run()
         
         // without the inner while loop, input performance gets really laggy    	        
 		while ( SDL_PollEvent(&Event) ) {  
-//		CCLog("--- GOT NEW EVENT .... \n");
-		 	switch (Event.type) {
+//		  CCLog("--- GOT NEW EVENT .... \n");
+		 switch (Event.type) {
                 case SDL_KEYDOWN:
                     switch (Event.key.keysym.sym) {
                         case PDLK_GESTURE_BACK: /* also maps to ESC */
@@ -91,9 +91,9 @@ int CCApplication::run()
                     break;
             }
         }
-		// Get current time tick.
-        // If it's the time to draw next frame, draw it, else sleep a while.
-        CCDirector::sharedDirector()->mainLoop();
+		   // Get current time tick.
+            // If it's the time to draw next frame, draw it, else sleep a while.
+            CCDirector::sharedDirector()->mainLoop();
      }
 
     return (int) 0;

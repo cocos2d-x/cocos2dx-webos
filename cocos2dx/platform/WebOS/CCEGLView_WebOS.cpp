@@ -65,7 +65,7 @@ public:
 		CCEGL * pEGL = new CCEGL;
 		do 
 		{
-			SDL_Init(SDL_INIT_VIDEO | SDL_INIT_NOPARACHUTE | SDL_INIT_JOYSTICK );
+			SDL_Init(SDL_INIT_VIDEO | SDL_INIT_NOPARACHUTE /*| SDL_INIT_JOYSTICK*/ );
 			atexit(SDL_Quit);
     
 			// start the PDL library
@@ -174,12 +174,12 @@ bool CCEGLView::Create(const char* pTitle, int w, int h)
 	m_sSizeInPixel.height = outMetrics.verticalPixels;
 	
 	do 
-	{        
+	{
 		m_eInitOrientation = CCDirector::sharedDirector()->getDeviceOrientation();
         m_bOrientationInitVertical = (CCDeviceOrientationPortrait == m_eInitOrientation
             || kCCDeviceOrientationPortraitUpsideDown == m_eInitOrientation) ? true : false;
         m_sSizeInPoint.width = w;
-        m_sSizeInPoint.height = h;    
+        m_sSizeInPoint.height = h;
         /* WebOS doesnt support resizing the window */ 
 		resize(w, h);
         
@@ -215,10 +215,10 @@ long CCEGLView::WindowProc(SDL_EventType message, SDL_Event& Event)
 {
     static int xLast = 0x0;
 	static int yLast = 0x0;	
-
+	
     switch(message){
 		case SDL_MOUSEBUTTONDOWN:
-			 //CCLog("--- SDL_MOUSEBUTTONDOWN X= %d,m_rcViewPort.origin.x = %d,y=%d,m_fScreenScaleFactor=%d \n",Event.button.x,m_rcViewPort.origin.x,Event.button.y,m_fScreenScaleFactor);
+			 CCLog("--- SDL_MOUSEBUTTONDOWN X= %d,m_rcViewPort.origin.x = %d,y=%d,m_fScreenScaleFactor=%d \n",Event.button.x,m_rcViewPort.origin.x,Event.button.y,m_fScreenScaleFactor);
 			 m_pTouch->SetTouchInfo(0, (float)(Event.button.x - m_rcViewPort.origin.x) ,
 						(float)(Event.button.y - m_rcViewPort.origin.y) );
 			 m_pSet->addObject(m_pTouch);
@@ -228,7 +228,7 @@ long CCEGLView::WindowProc(SDL_EventType message, SDL_Event& Event)
 		case SDL_MOUSEBUTTONUP:
 			if(m_bCaptured == true) {
 			m_bCaptured = false;
-			//CCLog("--- SDL_MOUSEBUTTONUP X= %d,m_rcViewPort.origin.x = %d,y=%d,m_fScreenScaleFactor=%d \n",Event.button.x,m_rcViewPort.origin.x,Event.button.y,m_fScreenScaleFactor);
+			CCLog("--- SDL_MOUSEBUTTONUP X= %d,m_rcViewPort.origin.x = %d,y=%d,m_fScreenScaleFactor=%d \n",Event.button.x,m_rcViewPort.origin.x,Event.button.y,m_fScreenScaleFactor);
 			m_pTouch->SetTouchInfo(0, (float)(Event.button.x - m_rcViewPort.origin.x) ,
                 (float)(Event.button.y - m_rcViewPort.origin.y));
 			m_pDelegate->touchesEnded(m_pSet, NULL);
@@ -244,7 +244,7 @@ long CCEGLView::WindowProc(SDL_EventType message, SDL_Event& Event)
 			xLast=Event.button.x;
 			yLast=Event.button.y;            				
             /* Tracking Mouse Move with Left Button */
-			//CCLog("--- SDL_MOUSEMOTION(which=%d,state=%d,) X= %d,y=%d,m_fScreenScaleFactor=%d \n",Event.motion.which,Event.motion.state,Event.button.x,Event.button.y,m_fScreenScaleFactor);
+			CCLog("--- SDL_MOUSEMOTION(which=%d,state=%d,) X= %d,y=%d,m_fScreenScaleFactor=%d \n",Event.motion.which,Event.motion.state,Event.button.x,Event.button.y,m_fScreenScaleFactor);
 			m_pTouch->SetTouchInfo(0, (float)(Event.button.x - m_rcViewPort.origin.x),(float)(Event.button.y - m_rcViewPort.origin.x));
 			m_pDelegate->touchesMoved(m_pSet, NULL);
 			}
@@ -301,12 +301,12 @@ int CCEGLView::setDeviceOrientation(int eOritation)
 {
 	// Touchpads are landscape by default, so we want to switch properly in that case
 	bool portraitDefault = true;
-	
+
 	PDL_ScreenMetrics outMetrics;
 	PDL_GetScreenMetrics(&outMetrics);
 	if (outMetrics.horizontalPixels > outMetrics.verticalPixels)
 		portraitDefault = false;		
-	
+
 	if (eOritation == CCDeviceOrientationPortrait || eOritation == CCDeviceOrientationPortraitUpsideDown)
 	{
 		int width = MIN(m_sSizeInPixel.width, m_sSizeInPixel.height);
@@ -357,7 +357,7 @@ void CCEGLView::setIMEKeyboardState(bool /*bOpen*/)
 
 void CCEGLView::resize(int width, int height)
 {
-
+    
 }
 
 void CCEGLView::centerWindow()
@@ -368,7 +368,7 @@ void CCEGLView::centerWindow()
 void CCEGLView::setScreenScale(float factor)
 {
     CCLog("--- Into setScreenScale ...\n");
-//    m_fScreenScaleFactor = factor;
+   // m_fScreenScaleFactor = factor;
 }
 
 bool CCEGLView::canSetContentScaleFactor()

@@ -56,7 +56,7 @@ public:
 
 	virtual bool Create(const char * pTitle, int w, int h);
 	virtual long WindowProc(SDL_EventType message, SDL_Event& Event);
- 
+
     int setDeviceOrientation(int eOritation);
     void setViewPortInPoints(float x, float y, float w, float h);
     void setScissorInPoints(float x, float y, float w, float h);

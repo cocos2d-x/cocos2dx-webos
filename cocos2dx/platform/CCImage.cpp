@@ -152,7 +152,7 @@ bool CCImage::_initWithJpgData(void * data, int nSize)
         /* setup decompression process and source, then read JPEG header */
         jpeg_create_decompress( &cinfo );
 
-		jpeg_mem_src( &cinfo, (unsigned char *) data, nSize );
+        jpeg_mem_src( &cinfo, (unsigned char *) data, nSize );
 
         /* reading the image header which contains image information */
         jpeg_read_header( &cinfo, true );
@@ -216,7 +216,7 @@ bool CCImage::_initWithPngData(void * pData, int nDatalen)
     {
         // png header len is 8 bytes
     	CC_BREAK_IF(nDatalen < 8);
-    	
+
         // check the data is png or not
         memcpy(header, pData, 8);
         CC_BREAK_IF(png_sig_cmp(header, 0, 8));

@@ -62,6 +62,7 @@ OBJECTS = ../actions/CCAction.o \
 					../particle_nodes/CCParticleSystem.o \
 					../particle_nodes/CCParticleSystemQuad.o \
 					../platform/CCCommon.o \
+					../platform/CCFileUtils.o \
 					../platform/CCGL.o \
 					../platform/CCImage.o \
 					../platform/CCSAXParser.o \
@@ -70,7 +71,6 @@ OBJECTS = ../actions/CCAction.o \
 					../platform/platform.o \
 					../platform/WebOS/CCApplication_WebOS.o \
 					../platform/WebOS/CCEGLView_WebOS.o \
-					../platform/WebOS/CCFileUtils_WebOS.o \
 					../platform/WebOS/CCAccelerometer_WebOS.o \
 					../script_support/CCScriptSupport.o \
 					../sprite_nodes/CCAnimation.o \
