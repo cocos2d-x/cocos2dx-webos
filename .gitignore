@@ -66,3 +66,7 @@ build/
 Simulator/
 Device-Debug/
 Device-Release/
+
+CocosDenshion/proj.webos/libcocosdenshion.a
+
+cocos2dx/proj.webos/libcocos2d.a
