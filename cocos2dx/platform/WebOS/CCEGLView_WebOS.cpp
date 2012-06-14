@@ -170,14 +170,22 @@ bool CCEGLView::Create(const char* pTitle, int w, int h)
 	
 	PDL_ScreenMetrics outMetrics;
 	PDL_GetScreenMetrics(&outMetrics);
-	m_sSizeInPixel.width = outMetrics.horizontalPixels; 
-	m_sSizeInPixel.height = outMetrics.verticalPixels;
+	int large = MAX(outMetrics.horizontalPixels, outMetrics.verticalPixels);
+	int small = MIN(outMetrics.horizontalPixels, outMetrics.verticalPixels);
+	
+	if (w > h) {
+		m_sSizeInPixel.width = large; 
+		m_sSizeInPixel.height = small;
+	} else {
+		m_sSizeInPixel.width = small; 
+		m_sSizeInPixel.height = large;
+	}		
 	
 	do 
 	{        
-		m_eInitOrientation = CCDirector::sharedDirector()->getDeviceOrientation();
+/*		m_eInitOrientation = CCDirector::sharedDirector()->getDeviceOrientation();
         m_bOrientationInitVertical = (CCDeviceOrientationPortrait == m_eInitOrientation
-            || kCCDeviceOrientationPortraitUpsideDown == m_eInitOrientation) ? true : false;
+            || kCCDeviceOrientationPortraitUpsideDown == m_eInitOrientation) ? true : false; */
         m_sSizeInPoint.width = w;
         m_sSizeInPoint.height = h;    
         /* WebOS doesnt support resizing the window */ 
