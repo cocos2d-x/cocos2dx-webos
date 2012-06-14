@@ -96,7 +96,7 @@ bool AppDelegate::initInstance()
 		CCEGLView * pMainWnd = new CCEGLView();
 		
 		CC_BREAK_IF(! pMainWnd|| ! pMainWnd->Create("cocos2d: tests", 480, 320));
-		pMainWnd->setDeviceOrientation(CCDeviceOrientationLandscapeLeft);
+		CCDirector::sharedDirector()->setDeviceOrientation(CCDeviceOrientationLandscapeLeft);
 
 		CCFileUtils::setResourcePath("/Res/");
 #endif // CC_PLATFORM_WEBOS

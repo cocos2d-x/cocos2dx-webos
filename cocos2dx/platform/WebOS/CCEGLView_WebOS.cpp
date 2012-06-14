@@ -170,24 +170,25 @@ bool CCEGLView::Create(const char* pTitle, int w, int h)
 	
 	PDL_ScreenMetrics outMetrics;
 	PDL_GetScreenMetrics(&outMetrics);
-	int large = MAX(outMetrics.horizontalPixels, outMetrics.verticalPixels);
-	int small = MIN(outMetrics.horizontalPixels, outMetrics.verticalPixels);
+	int large = MAX(w, h);
+	int small = MIN(w, h);
 	
-	if (w > h) {
-		m_sSizeInPixel.width = large; 
-		m_sSizeInPixel.height = small;
+	if (outMetrics.horizontalPixels > outMetrics.verticalPixels) {
+		w = large; 
+		h = small;
 	} else {
-		m_sSizeInPixel.width = small; 
-		m_sSizeInPixel.height = large;
+		w = small;
+		h = large;
 	}		
+
+	m_sSizeInPixel.width = outMetrics.horizontalPixels; 
+	m_sSizeInPixel.height = outMetrics.verticalPixels;
 	
 	do 
 	{        
-/*		m_eInitOrientation = CCDirector::sharedDirector()->getDeviceOrientation();
-        m_bOrientationInitVertical = (CCDeviceOrientationPortrait == m_eInitOrientation
-            || kCCDeviceOrientationPortraitUpsideDown == m_eInitOrientation) ? true : false; */
-        m_sSizeInPoint.width = w;
-        m_sSizeInPoint.height = h;    
+        m_sSizeInPoint.width = (float)w;
+        m_sSizeInPoint.height = (float)h;   
+ 
         /* WebOS doesnt support resizing the window */ 
 		resize(w, h);
         
@@ -215,7 +216,7 @@ bool CCEGLView::Create(const char* pTitle, int w, int h)
 	m_rcViewPort.origin.y = (m_sSizeInPixel.height - viewPortH) / 2;
 	m_rcViewPort.size.width = viewPortW;
 	m_rcViewPort.size.height = viewPortH;
-	
+
 	return bRet;
 }
 
@@ -227,8 +228,8 @@ long CCEGLView::WindowProc(SDL_EventType message, SDL_Event& Event)
     switch(message){
 		case SDL_MOUSEBUTTONDOWN:
 			 //CCLog("--- SDL_MOUSEBUTTONDOWN X= %d,m_rcViewPort.origin.x = %d,y=%d,m_fScreenScaleFactor=%d \n",Event.button.x,m_rcViewPort.origin.x,Event.button.y,m_fScreenScaleFactor);
-			 m_pTouch->SetTouchInfo(0, (float)(Event.button.x - m_rcViewPort.origin.x) ,
-						(float)(Event.button.y - m_rcViewPort.origin.y) );
+			 m_pTouch->SetTouchInfo(0, (float)(Event.button.x - m_rcViewPort.origin.x) / m_fScreenScaleFactor ,
+						(float)(Event.button.y - m_rcViewPort.origin.y) / m_fScreenScaleFactor );
 			 m_pSet->addObject(m_pTouch);
 			 m_pDelegate->touchesBegan(m_pSet, NULL);
 			 m_bCaptured = true;
@@ -237,8 +238,8 @@ long CCEGLView::WindowProc(SDL_EventType message, SDL_Event& Event)
 			if(m_bCaptured == true) {
 			m_bCaptured = false;
 			//CCLog("--- SDL_MOUSEBUTTONUP X= %d,m_rcViewPort.origin.x = %d,y=%d,m_fScreenScaleFactor=%d \n",Event.button.x,m_rcViewPort.origin.x,Event.button.y,m_fScreenScaleFactor);
-			m_pTouch->SetTouchInfo(0, (float)(Event.button.x - m_rcViewPort.origin.x) ,
-                (float)(Event.button.y - m_rcViewPort.origin.y));
+			m_pTouch->SetTouchInfo(0, (float)(Event.button.x - m_rcViewPort.origin.x) / m_fScreenScaleFactor,
+                (float)(Event.button.y - m_rcViewPort.origin.y) / m_fScreenScaleFactor );
 			m_pDelegate->touchesEnded(m_pSet, NULL);
 			m_pSet->removeObject(m_pTouch);
 			
@@ -253,7 +254,8 @@ long CCEGLView::WindowProc(SDL_EventType message, SDL_Event& Event)
 			yLast=Event.button.y;            				
             /* Tracking Mouse Move with Left Button */
 			//CCLog("--- SDL_MOUSEMOTION(which=%d,state=%d,) X= %d,y=%d,m_fScreenScaleFactor=%d \n",Event.motion.which,Event.motion.state,Event.button.x,Event.button.y,m_fScreenScaleFactor);
-			m_pTouch->SetTouchInfo(0, (float)(Event.button.x - m_rcViewPort.origin.x),(float)(Event.button.y - m_rcViewPort.origin.x));
+			m_pTouch->SetTouchInfo(0, (float)(Event.button.x - m_rcViewPort.origin.x) / m_fScreenScaleFactor,
+						(float)(Event.button.y - m_rcViewPort.origin.x) / m_fScreenScaleFactor);
 			m_pDelegate->touchesMoved(m_pSet, NULL);
 			}
 			
@@ -267,13 +269,14 @@ long CCEGLView::WindowProc(SDL_EventType message, SDL_Event& Event)
 
 CCSize CCEGLView::getSize()
 {
-	PDL_ScreenMetrics outMetrics;
+	return CCSize(m_sSizeInPoint.width, m_sSizeInPoint.height);
+/*	PDL_ScreenMetrics outMetrics;
 	
 	PDL_Err error = PDL_GetScreenMetrics(&outMetrics);
 	if (error == PDL_NOERROR)
     	return CCSize(outMetrics.horizontalPixels,outMetrics.verticalPixels);
     else
-    	return CCSize(320,400); //assuming the smallest size, because it will scale up better than down 
+    	return CCSize(320,400); //assuming the smallest size, because it will scale up better than down */
 }
 
 bool CCEGLView::isOpenGLReady()
@@ -307,40 +310,25 @@ void CCEGLView::swapBuffers()
 
 int CCEGLView::setDeviceOrientation(int eOritation)
 {	
-	if (eOritation == CCDeviceOrientationPortrait || eOritation == CCDeviceOrientationPortraitUpsideDown)
-	{
-		int width = MIN(m_sSizeInPixel.width, m_sSizeInPixel.height);
-		m_sSizeInPixel.height = MAX(m_sSizeInPixel.width, m_sSizeInPixel.height);
-		m_sSizeInPixel.width = width;
-		width = MIN(m_sSizeInPoint.width, m_sSizeInPoint.height);
-		m_sSizeInPoint.height = MAX(m_sSizeInPoint.width, m_sSizeInPoint.height);
-		m_sSizeInPoint.width = width;
-		resize(m_sSizeInPoint.width, m_sSizeInPoint.height);
-		CCDirector::sharedDirector()->setDeviceOrientation(CCDeviceOrientationPortrait);
-	}
-	else
-	{
-		int width = MAX(m_sSizeInPixel.width, m_sSizeInPixel.height);
-		m_sSizeInPixel.height = MIN(m_sSizeInPixel.width, m_sSizeInPixel.height);
-		m_sSizeInPixel.width = width;
-		width = MAX(m_sSizeInPoint.width, m_sSizeInPoint.height);
-		m_sSizeInPoint.height = MIN(m_sSizeInPoint.width, m_sSizeInPoint.height);
-		m_sSizeInPoint.width = width;
-		resize(m_sSizeInPoint.width, m_sSizeInPoint.height);
-		CCDirector::sharedDirector()->setDeviceOrientation(CCDeviceOrientationLandscapeLeft);
-	}
-
 	return m_eInitOrientation;
 }
 
 void CCEGLView::setViewPortInPoints(float x, float y, float w, float h)
 {
     float factor = m_fScreenScaleFactor / CC_CONTENT_SCALE_FACTOR();
+    glViewport((GLint)(x * factor) + m_rcViewPort.origin.x,
+    	(GLint)(y * factor) + m_rcViewPort.origin.y,
+    	(GLint)(w * factor),
+        (GLint)(h * factor));
 }
 
 void CCEGLView::setScissorInPoints(float x, float y, float w, float h)
 {
     float factor = m_fScreenScaleFactor / CC_CONTENT_SCALE_FACTOR();
+    glScissor((GLint)(x * factor) + m_rcViewPort.origin.x,
+        (GLint)(y * factor) + m_rcViewPort.origin.y,
+        (GLint)(w * factor),
+        (GLint)(h * factor));
 }
 
 void CCEGLView::setIMEKeyboardState(bool /*bOpen*/)
@@ -351,12 +339,21 @@ void CCEGLView::setIMEKeyboardState(bool /*bOpen*/)
 
 void CCEGLView::resize(int width, int height)
 {
+	// calculate the factor and the rect of viewport	
+	m_fScreenScaleFactor =  MIN((float)m_sSizeInPixel.width / m_sSizeInPoint.width,
+		                        (float)m_sSizeInPixel.height / m_sSizeInPoint.height);
 
+	int viewPortW = (int)(m_sSizeInPoint.width * m_fScreenScaleFactor);
+	int viewPortH = (int)(m_sSizeInPoint.height * m_fScreenScaleFactor);
+
+	m_rcViewPort.origin.x = (m_sSizeInPixel.width - viewPortW) / 2;
+	m_rcViewPort.origin.y = (m_sSizeInPixel.height - viewPortH) / 2;
+	m_rcViewPort.size.width = viewPortW;
+	m_rcViewPort.size.height = viewPortH;
 }
 
 void CCEGLView::centerWindow()
 {
-
 }
 
 void CCEGLView::setScreenScale(float factor)
