@@ -205,7 +205,7 @@ void SDLAudioPlayer::preloadEffect(const char* pszFilePath) {
 
 	mapEffectSound[pszFilePath] = Mix_LoadWAV(filePath.c_str());
 	if (!mapEffectSound[pszFilePath])
-		printf("Unable to load sound file %s: %s", currentMusic.c_str(), Mix_GetError());
+		printf("Unable to load sound file %s: %s", filrPath.c_str(), Mix_GetError());
 }
 
 void SDLAudioPlayer::unloadEffect(const char* pszFilePath) {
