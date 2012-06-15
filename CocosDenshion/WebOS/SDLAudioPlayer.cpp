@@ -34,6 +34,7 @@ static string fullPathFromRelativePath(const char *pszRelativePath)
     	strRet = s_strResourcePath;
     	strRet += pszRelativePath;
     }
+
 	return strRet;
 }
 
@@ -205,7 +206,7 @@ void SDLAudioPlayer::preloadEffect(const char* pszFilePath) {
 
 	mapEffectSound[pszFilePath] = Mix_LoadWAV(filePath.c_str());
 	if (!mapEffectSound[pszFilePath])
-		printf("Unable to load sound file %s: %s", filrPath.c_str(), Mix_GetError());
+		printf("Unable to load sound file %s: %s", filePath.c_str(), Mix_GetError());
 }
 
 void SDLAudioPlayer::unloadEffect(const char* pszFilePath) {
