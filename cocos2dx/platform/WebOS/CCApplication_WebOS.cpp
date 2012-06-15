@@ -45,10 +45,10 @@ int CCApplication::run()
 	
     CCEGLView& mainWnd = CCEGLView::sharedOpenGLView();
     mainWnd.centerWindow();
-   CCLog(" --- BEFORE EVENT LOOP\n");
-	 SDL_Event Event;
-	 while (1) {
-        bool gotEvent;
+  	CCLog(" --- BEFORE EVENT LOOP\n");
+	SDL_Event Event;
+	while (1) {
+		bool gotEvent;
         
         // without the inner while loop, input performance gets really laggy    	        
 		while ( SDL_PollEvent(&Event) ) {  
@@ -86,6 +86,12 @@ int CCApplication::run()
                     break;
                 case SDL_JOYAXISMOTION:
                 	CCAccelerometer::sharedAccelerometer()->update(joystick, time(NULL));
+                	break;
+                case SDL_ACTIVEEVENT:
+                	if (Event.active.gain)
+                		CCDirector::sharedDirector()->resume();
+                	else
+                		CCDirector::sharedDirector()->pause();
                 	break;
                 default:
                     break;
