@@ -98,7 +98,7 @@ bool AppDelegate::initInstance()
 		CC_BREAK_IF(! pMainWnd|| ! pMainWnd->Create("cocos2d: tests", 480, 320));
 		CCDirector::sharedDirector()->setDeviceOrientation(CCDeviceOrientationLandscapeLeft);
 
-		CCFileUtils::setResourcePath("/Res/");
+		CCFileUtils::setResourcePath("./Res/");
 #endif // CC_PLATFORM_WEBOS
 
         bRet = true;

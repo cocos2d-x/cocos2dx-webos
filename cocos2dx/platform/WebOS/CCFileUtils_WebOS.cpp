@@ -32,7 +32,6 @@ void CCFileUtils::setResourcePath(const char* pszResourcePath) {
 */	
 }
 
-
 const char* CCFileUtils::fullPathFromRelativePath(const char *pszRelativePath) {
 	string strRet="";
 	int len = strlen(pszRelativePath);
@@ -41,7 +40,7 @@ const char* CCFileUtils::fullPathFromRelativePath(const char *pszRelativePath) {
 		return strRet.c_str();
 	}
 
-    if (len > 1 && pszRelativePath[0] == '/')
+    if (len > 1 && pszRelativePath[0] == '.')
     {
     	strRet = pszRelativePath;
     }
