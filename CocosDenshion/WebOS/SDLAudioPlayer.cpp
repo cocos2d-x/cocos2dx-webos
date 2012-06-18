@@ -14,30 +14,6 @@
 
 namespace CocosDenshion {
 
-static string s_strResourcePath = "./Res/";
-
-static string fullPathFromRelativePath(const char *pszRelativePath)
-{
-	string strRet="";
-	int len = strlen(pszRelativePath);
-	if (pszRelativePath == NULL || len <= 0)
-	{
-		return strRet;
-	}
-
-    if (len > 1 && pszRelativePath[0] == '/')
-    {
-    	strRet = pszRelativePath;
-    }
-    else
-    {
-    	strRet = s_strResourcePath;
-    	strRet += pszRelativePath;
-    }
-
-	return strRet;
-}
-
 SDLAudioPlayer* SDLAudioPlayer::sharedPlayer() {
 	static SDLAudioPlayer s_SharedPlayer;
 	return &s_SharedPlayer;
@@ -66,16 +42,20 @@ void SDLAudioPlayer::init() {
 
 void SDLAudioPlayer::close() {
 	Mix_CloseAudio();
+	init();
 }
 
 SDLAudioPlayer::~SDLAudioPlayer() {
 	if (pMusic != NULL)
 		stopBackgroundMusic(true);
+	
+	stopAllEffects();
+	Mix_CloseAudio();
 }
 
 // BGM
 void SDLAudioPlayer::preloadBackgroundMusic(const char* pszFilePath) {
-	currentMusic = fullPathFromRelativePath(pszFilePath);
+	currentMusic = pszFilePath;
 
 	// free old music
 	if (pMusic != NULL)
@@ -88,7 +68,7 @@ void SDLAudioPlayer::preloadBackgroundMusic(const char* pszFilePath) {
 }
 
 void SDLAudioPlayer::playBackgroundMusic(const char* pszFilePath, bool bLoop) {
-	if (currentMusic != fullPathFromRelativePath(pszFilePath)) 
+	if (currentMusic != pszFilePath) 
 		preloadBackgroundMusic(pszFilePath);
 	
 	int loop = bLoop ? -1 : 1;
@@ -202,7 +182,7 @@ void SDLAudioPlayer::stopAllEffects() {
 }
 
 void SDLAudioPlayer::preloadEffect(const char* pszFilePath) {
-	string filePath = fullPathFromRelativePath(pszFilePath);
+	string filePath = pszFilePath;
 
 	mapEffectSound[pszFilePath] = Mix_LoadWAV(filePath.c_str());
 	if (!mapEffectSound[pszFilePath])
