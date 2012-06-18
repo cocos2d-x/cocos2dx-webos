@@ -17,7 +17,7 @@ DEFINES = -DWEBOS
 OBJECTS =   ../WebOS/SDLAudioPlayer.o \
             ../WebOS/SimpleAudioEngine.o \
 
-SHAREDLIBS = -lSDL -lGLES_CM -lpdl -lpthread-2.5
+SHAREDLIBS = -lSDL -lSDL_mixer -lGLES_CM -lpdl -lpthread-2.5
 
 ####### Build rules  $(STATICLIBS)
 $(TARGET): $(OBJECTS) 

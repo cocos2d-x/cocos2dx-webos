@@ -112,7 +112,7 @@ OBJECTS = ../actions/CCAction.o \
 					../CCScheduler.o \
 					../cocos2d.o 
 
-SHAREDLIBS = -lSDL -lGLES_CM -lpdl -lpthread-2.5 -ljpeg -lpng12 -lz -lxml2
+SHAREDLIBS = -lSDL -lGLES_CM -lpdl -lpthread-2.5 -lpng12 -lz -lxml2
 
 ####### Build rules  $(STATICLIBS)
 $(TARGET): $(OBJECTS) 
