@@ -319,7 +319,7 @@ int CCEGLView::setDeviceOrientation(int eOritation)
 		if (portraitDefault)
 			CCDirector::sharedDirector()->setDeviceOrientation(CCDeviceOrientationPortrait);
 		else
-			CCDirector::sharedDirector()->setDeviceOrientation(CCDeviceOrientationLandscapeLeft);	
+			CCDirector::sharedDirector()->setDeviceOrientation(CCDeviceOrientationLandscapeRight);	
 	}
 	else
 	{
