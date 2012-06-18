@@ -65,7 +65,7 @@ public:
 		CCEGL * pEGL = new CCEGL;
 		do 
 		{
-			SDL_Init(SDL_INIT_VIDEO | SDL_INIT_NOPARACHUTE /*| SDL_INIT_JOYSTICK*/ );
+			SDL_Init(SDL_INIT_VIDEO | SDL_INIT_NOPARACHUTE | SDL_INIT_JOYSTICK );
 			atexit(SDL_Quit);
     
 			// start the PDL library
