@@ -121,15 +121,19 @@ CCApplication::Orientation CCApplication::setOrientation(Orientation orientation
 		portraitDefault = false;
 		
 	if (orientation == kOrientationPortrait) {
+		PDL_SetOrientation(PDL_ORIENTATION_0);
 		if (!portraitDefault)
 			orientation = kOrientationLandscapeLeft;
 	} else if (orientation == kOrientationPortraitUpsideDown) {
+		PDL_SetOrientation(PDL_ORIENTATION_180);
 		if (!portraitDefault)
 			orientation = kOrientationLandscapeRight;	
 	} else if (orientation == kOrientationLandscapeLeft){ 
+		PDL_SetOrientation(PDL_ORIENTATION_270);
 		if (!portraitDefault)
 			orientation = kOrientationPortrait;
 	} else {
+		PDL_SetOrientation(PDL_ORIENTATION_90);
 		if (!portraitDefault)
 			orientation = kOrientationPortraitUpsideDown;	
 	}	

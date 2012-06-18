@@ -189,7 +189,6 @@ bool CCEGLView::Create(const char* pTitle, int w, int h)
         m_sSizeInPoint.width = (float)w;
         m_sSizeInPoint.height = (float)h;   
  
-        /* WebOS doesnt support resizing the window */ 
 		resize(w, h);
         
 		// init egl
