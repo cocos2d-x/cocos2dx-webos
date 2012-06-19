@@ -4,7 +4,8 @@
 #include "CCDirector.h"
 #include "SDL.h"
 #include "PDL.h"
-
+#include "CCKeypadDispatcher.h"
+#include "CCIMEDispatcher.h"
 /**
 @brief	This function change the PVRFrame show/hide setting in register.
 @param  bEnable If true show the PVRFrame window, otherwise hide.
@@ -63,9 +64,22 @@ int CCApplication::run()
                                 PDL_Minimize();
                             }
                             break;
-
-                        default:
+                            case PDLK_GESTURE_DISMISS_KEYBOARD:{
+                                CCDirector::sharedDirector()->getOpenGLView()->setIMEKeyboardState(false);
+                            }
                             break;
+                            case SDLK_BACKSPACE: {
+                                CCIMEDispatcher::sharedDispatcher()->dispatchDeleteBackward();
+                            }
+                            break;
+                        default:
+                        {
+                            char buf[2];
+                            buf[0] = (char)(Event.key.keysym.sym);
+                            buf[1]=  '\0';
+                            CCIMEDispatcher::sharedDispatcher()->dispatchInsertText(buf, 1); 
+                        }
+                        break;
                     }
                     break;
                 case SDL_MOUSEBUTTONDOWN:
@@ -106,6 +120,26 @@ void CCApplication::setAnimationInterval(double interval)
 
 CCApplication::Orientation CCApplication::setOrientation(Orientation orientation)
 {
+    if(orientation == kOrientationPortrait)
+    {   
+        PDL_SetOrientation(PDL_ORIENTATION_90 );    
+        return kOrientationLandscapeRight;
+    }
+    if(orientation == kOrientationLandscapeRight) 
+    {   
+        PDL_SetOrientation(PDL_ORIENTATION_0 ); 
+        return kOrientationPortrait;
+    }
+    if(orientation==kOrientationLandscapeLeft) 
+    {   
+        PDL_SetOrientation(PDL_ORIENTATION_180 );    
+        return kOrientationPortraitUpsideDown;
+    }
+    if(orientation==kOrientationPortraitUpsideDown) 
+    {
+        PDL_SetOrientation(PDL_ORIENTATION_270 );
+        return kOrientationLandscapeLeft;
+    }
 	return orientation;
 }
 

@@ -150,7 +150,7 @@ CCEGLView::CCEGLView()
 , m_bOrientationInitVertical(false)
 , m_pDelegate(NULL)
 , m_pEGL(NULL)
-, m_eInitOrientation(CCDeviceOrientationPortrait)
+, m_eInitOrientation(CCDeviceOrientationLandscapeRight)
 , m_fScreenScaleFactor(1.0f)
 {
     m_pTouch    = new CCTouch;
@@ -166,13 +166,13 @@ CCEGLView::~CCEGLView()
 
 bool CCEGLView::Create(const char* pTitle, int w, int h)
 {
+    PDL_SetOrientation(PDL_ORIENTATION_0 );
 	bool bRet = false;
 	
 	PDL_ScreenMetrics outMetrics;
 	PDL_GetScreenMetrics(&outMetrics);
 	m_sSizeInPixel.width = outMetrics.horizontalPixels; 
 	m_sSizeInPixel.height = outMetrics.verticalPixels;
-	
 	do 
 	{
 		m_eInitOrientation = CCDirector::sharedDirector()->getDeviceOrientation();
@@ -207,7 +207,7 @@ bool CCEGLView::Create(const char* pTitle, int w, int h)
 	m_rcViewPort.origin.y = (m_sSizeInPixel.height - viewPortH) / 2;
 	m_rcViewPort.size.width = viewPortW;
 	m_rcViewPort.size.height = viewPortH;
-	
+
 	return bRet;
 }
 
@@ -331,7 +331,7 @@ int CCEGLView::setDeviceOrientation(int eOritation)
 		m_sSizeInPoint.width = width;
 		resize(m_sSizeInPoint.width, m_sSizeInPoint.height);
 		if (portraitDefault)
-			CCDirector::sharedDirector()->setDeviceOrientation(CCDeviceOrientationLandscapeLeft);
+			CCDirector::sharedDirector()->setDeviceOrientation(CCDeviceOrientationLandscapeRight);
 		else
 			CCDirector::sharedDirector()->setDeviceOrientation(CCDeviceOrientationPortrait);		
 	}
@@ -349,9 +349,9 @@ void CCEGLView::setScissorInPoints(float x, float y, float w, float h)
     float factor = m_fScreenScaleFactor / CC_CONTENT_SCALE_FACTOR();
 }
 
-void CCEGLView::setIMEKeyboardState(bool /*bOpen*/)
+void CCEGLView::setIMEKeyboardState(bool bOpen)
 {
-
+    PDL_SetKeyboardState(PDL_bool (bOpen));
 }
 
 

@@ -112,7 +112,7 @@ STATICLIBS =  ../../Box2D/proj.webos/libbox2d.a \
 							
 							
 #SHAREDLIBS = -L../../lib/linux/Debug -lcocos2d -lrt -lz -lcocosdenshion -Wl,-rpath,../../lib/linux/Debug/
-SHAREDLIBS = -L../../cocos2dx/proj.webos/ -lcocos2d -lcurl -lGLES_CM -L../../CocosDenshion/proj.webos/ -lcocosdenshion
+SHAREDLIBS = -L../../cocos2dx/proj.webos -lcocos2d -lcurl -lGLES_CM -L../../CocosDenshion/proj.webos -lcocosdenshion
 
 ####### Build rules
 $(TARGET): $(OBJECTS) 
