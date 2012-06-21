@@ -74,10 +74,7 @@ int CCApplication::run()
                             break;
                         default:
                         {
-                            char buf[2];
-                            buf[0] = (char)(Event.key.keysym.sym);
-                            buf[1]=  '\0';
-                            CCIMEDispatcher::sharedDispatcher()->dispatchInsertText(buf, 1); 
+                            CCIMEDispatcher::sharedDispatcher()->dispatchInsertText(SDL_GetKeyName(Event.key.keysym.sym), 1); 
                         }
                         break;
                     }
@@ -101,10 +98,25 @@ int CCApplication::run()
                 case SDL_JOYAXISMOTION:
                 	CCAccelerometer::sharedAccelerometer()->update(joystick, time(NULL));
                 	break;
+                case SDL_ACTIVEEVENT:
+                      switch(Event.active.gain)
+                      {
+                        case 1:
+                            {
+                                applicationWillEnterForeground();
+                                break;
+                            }
+                        default:
+                        {
+                            applicationDidEnterBackground();
+                            break;
+                        }
+                      }
+                    break;
                 default:
                     break;
             }
-        }
+        }   
 		   // Get current time tick.
             // If it's the time to draw next frame, draw it, else sleep a while.
             CCDirector::sharedDirector()->mainLoop();
