@@ -4,7 +4,8 @@
 #include "CCDirector.h"
 #include "SDL.h"
 #include "PDL.h"
-
+#include "CCKeypadDispatcher.h"
+#include "CCIMEDispatcher.h"
 /**
 @brief	This function change the PVRFrame show/hide setting in register.
 @param  bEnable If true show the PVRFrame window, otherwise hide.
@@ -63,9 +64,19 @@ int CCApplication::run()
                                 PDL_Minimize();
                             }
                             break;
-
-                        default:
+                        case PDLK_GESTURE_DISMISS_KEYBOARD:{
+                                CCDirector::sharedDirector()->getOpenGLView()->setIMEKeyboardState(false);
+                            }
                             break;
+                        case SDLK_BACKSPACE: {
+                                CCIMEDispatcher::sharedDispatcher()->dispatchDeleteBackward();
+                            }
+                            break;
+                        default:
+                        {
+                            CCIMEDispatcher::sharedDispatcher()->dispatchInsertText(SDL_GetKeyName(Event.key.keysym.sym), 1); 
+                        }
+                        break;
                     }
                     break;
                 case SDL_MOUSEBUTTONDOWN:
@@ -88,11 +99,20 @@ int CCApplication::run()
                 	CCAccelerometer::sharedAccelerometer()->update(joystick, time(NULL));
                 	break;
                 case SDL_ACTIVEEVENT:
-                	if (Event.active.gain)
-                		CCDirector::sharedDirector()->resume();
-                	else
-                		CCDirector::sharedDirector()->pause();
-                	break;
+                      switch(Event.active.gain)
+                      {
+                        case 1:
+                            {
+                                applicationWillEnterForeground();
+                                break;
+                            }
+                        default:
+                        {
+                            applicationDidEnterBackground();
+                            break;
+                        }
+                      }
+                    break;
                 default:
                     break;
             }
